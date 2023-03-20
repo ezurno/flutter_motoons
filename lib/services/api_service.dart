@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter_motoons/models/webtoons_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -6,7 +9,9 @@ class ApiService {
   // url 을 받아오기 위해선 http package를 설치해야 함
   // pub.dev 에서 search
 
-  void getTodaysToons() async {
+  Future<List<WebtoonModel>> getTodaysToons() async {
+    List<WebtoonModel> webtoonInstance = [];
+
     final url = Uri.parse("$baseUrl/$today");
     //Uri.parse 를 통해 url를 변경 해줌
     final response = await http.get(url);
@@ -19,8 +24,19 @@ class ApiService {
     */
 
     if (response.statusCode == 200) {
-      print(response.body); // 만약 사애가 200으로 정상일 경우 console 에 내용 출력
-      return;
+      final List<dynamic> webtoons = jsonDecode(response.body);
+      // response.body로 가져오면 String 형식이 되므로 json형식으로 decoding 해준다
+      // 새로운 List 타입의 공간으로 값을 할당
+
+      for (var webtoon in webtoons) {
+        final toonInfo = WebtoonModel.fromJson(webtoon);
+        // WebtoonModel 에서 구현한 fromJson 생성자를 이용해 object를 분리
+        // print(toonInfo.title);
+
+        webtoonInstance.add(toonInfo);
+      }
+
+      return webtoonInstance;
     }
     throw Error(); // 그렇지 않을 시 error
   }
