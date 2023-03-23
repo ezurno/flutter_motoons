@@ -4,12 +4,15 @@ import 'package:flutter_motoons/models/webtoons_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "https://webtoon-crawler.nomadcoders.workers.dev";
-  final String today = "today";
+  static const String baseUrl =
+      "https://webtoon-crawler.nomadcoders.workers.dev";
+  static const String today = "today";
   // url 을 받아오기 위해선 http package를 설치해야 함
   // pub.dev 에서 search
+  // static 을 거는 이유는 ApiService 마다 값이 공유가 되어야하는데 걸지 않았을 경우,
+  // 값을 할당할때 따로 놀기 때문
 
-  Future<List<WebtoonModel>> getTodaysToons() async {
+  static Future<List<WebtoonModel>> getTodaysToons() async {
     List<WebtoonModel> webtoonInstance = [];
 
     final url = Uri.parse("$baseUrl/$today");

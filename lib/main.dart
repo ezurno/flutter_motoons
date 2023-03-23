@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_motoons/screens/home_screen.dart';
-import 'package:flutter_motoons/services/api_service.dart';
 
 void main() {
-  ApiService().getTodaysToons();
-
   runApp(const App());
 }
 
