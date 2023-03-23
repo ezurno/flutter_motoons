@@ -238,4 +238,47 @@ class _HomeScreenState extends State<HomeScreen> {
 - `print()`를 사용해 디버그콘솔로 확인해봄
 - `restart` 시 빈 배열에 loading 값도 **true**로 나오다가 비동기처리 된 API 값이 완전히 받아왔을 시 정상적으로 값을 가져오는 모습
 
--
+<br/>
+<br/>
+
+> ## FutureBuilder 를 사용해 API 간단하게 연결하기
+
+<br/>
+
+- 간혹 `state`를 사용할 수 없는 **widget**이 있기도 하며 더 간단하게 `api` 연결을 할 수 있음
+- `FutureBuilder` 를 사용하면 `statelessWidget` 에서도 `api` 연결 가능
+- `Scaffold.body` 에 넣어서 사용
+
+<br/>
+
+```Dart
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
+  Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
+  //  webtoons 가 곧 가져올 API 값을 할당할 것이기 때문에 Future 로 지정
+}
+ // 중략
+
+return Scaffold(
+  body: FutureBuilder(
+    future: webtoons,
+    // FutureBuilder 가 webtoons 를 기다리게 해줌
+    builder: (context, snapshot) {
+      // shotcut으로 받을 수 있음
+      // 요구하는 함수는 context와 snapshot을 받는데, snapshot은 future 의 상태를 나타냄
+      if(snapshot.hasData) {
+        // future 의 값이 존재 할 시,
+        return const Text("It has data!");
+      } else return const Text("Loading . . .");
+    }
+  )
+
+)
+```
+
+<br/>
+<img src ="md_resources\resource_11.png" width="400"/>
+<br/>
+<br/>
+
+- 데이터 값을 받아오기 전엔 **Loading...**, 정상적으로 데이터를 로드 한 후엔 **It has data!** 를 출력하는 모습
