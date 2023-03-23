@@ -204,3 +204,38 @@ for (var webtoon in webtoons) {
 ```
 
 <br/>
+
+###### 20230323
+
+> ## 외부 Widget에서 API 값 사용하기
+
+<br/>
+
+- **API** 값을 가져오는 **widget**의 변수와 비동기함수를 `static`으로 우선 변환 시켜준다
+- tatic 을 거는 이유는 ApiService 마다 값이 공유가 되어야하는데 걸지 않았을 경우, 값을 할당할 때 따로 놀기 때문
+- 사용할 **Widget**의 `Stateless` 를 `Stateful`로 수정해주고 **API-instance**값을 저장할 새 `state`를 만들어준다.
+
+<br/>
+
+```Dart
+class _HomeScreenState extends State<HomeScreen> {
+  List<WebtoonModel> webtoons = [];
+  bool isLoading = true;
+  void waitForWebToons() async {
+    webtoons = await ApiService.getTodaysToons();
+    // API server 에서 받아온 webtoonInstance 를 가져옴
+    isLoading = false;
+    setState(() {});
+  }
+}
+```
+
+<br/>
+<img src ="md_resources\resource_10.png" width="400"/>
+<br/>
+<br/>
+
+- `print()`를 사용해 디버그콘솔로 확인해봄
+- `restart` 시 빈 배열에 loading 값도 **true**로 나오다가 비동기처리 된 API 값이 완전히 받아왔을 시 정상적으로 값을 가져오는 모습
+
+-
