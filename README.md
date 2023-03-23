@@ -282,3 +282,109 @@ return Scaffold(
 <br/>
 
 - 데이터 값을 받아오기 전엔 **Loading...**, 정상적으로 데이터를 로드 한 후엔 **It has data!** 를 출력하는 모습
+
+<br/>
+<br/>
+
+> ## CircularProgressIndicator 로 로딩창 만들기
+
+<br/>
+<img src ="md_resources\resource_12.png" width="200"/>
+<br/>
+<br/>
+
+- `CircularProgressIndicator-widget` 은 원형으로 로딩 바가 돌아가는 애니메이션
+- **is Loading...** 구문을 대체 해줌
+
+<br/>
+<br/>
+
+> ## ListView-widget
+
+<br/>
+
+## ListView
+
+<br/>
+
+- `ListView-widget` 은 많은 양의 데이터를 보여줄 때 적합하며 여러 항목을 나열하는데 최적화 됨
+- 자동으로 scroll-view 도 가지고 있음
+
+<br/>
+
+```Dart
+ListView(
+              // 많은 양의 데이터를 보여줄 때 적합함 widget, 여러 항목을 나열하는데 최적화 됨
+              // 자동으로 scroll-view 도 가지고 있음
+              children: [
+                for (var webtoon in snapshot.data!)
+                  Text(webtoon.title) // collection for
+              ],
+            );
+```
+
+<br/>
+<img src ="md_resources\resource_13.png" width="200"/>
+<br/>
+<br/>
+
+## ListView.builder
+
+<br/>
+
+- `ListView.builder-widget` 은 `ListView`의 상위호환
+- user 가 해당 항목을 보고있지 않는다면 항목을 메모리에서 삭제해버림
+
+<br/>
+
+```Dart
+ListView.builder(
+              //ListView.builder 는 ListView 의 상위 버전
+              // user 가 해당 항목을 보고있지 않는다면 항목을 메모리에서 삭제해버림
+              scrollDirection: Axis.horizontal, // 축도 변경 가능
+              itemCount: snapshot.data!.length,
+
+              itemBuilder: (context, index) {
+                var webtoon = snapshot.data![index];
+                return Text(webtoon.title);
+              }, // 필수, list 형식으로 값을 사용하며 index를 사용해 항목을 조절
+            );
+```
+
+<br/>
+<img src ="md_resources\resource_14.png" width="200"/>
+<br/>
+<br/>
+
+## ListView.seperated
+
+<br/>
+
+- `ListView-seperated`는 항목 사이에 무언가를 추가할 때 사용
+
+<br/>
+
+```Dart
+ListView.separated(
+              //ListView.separated 는 builder 가 만든 item 사이에 무언가를 넣을 시 사용
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+
+              itemBuilder: (context, index) {
+                var webtoon = snapshot.data![index];
+                return Text(webtoon.title);
+              },
+
+              separatorBuilder: (context, index) {
+                // 필수, 사이 간격에 넣을 시 사용
+                return const SizedBox(
+                  width: 20,
+                );
+              },
+            );
+```
+
+<br/>
+<img src ="md_resources\resource_15.png" width="200"/>
+<br/>
+<br/>
