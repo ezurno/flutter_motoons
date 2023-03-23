@@ -34,9 +34,29 @@ class HomeScreen extends StatelessWidget {
           // 요구하는 함수는 context와 snapshot을 받는데, snapshot은 future 의 상태를 나타냄
           if (snapshot.hasData) {
             // future 의 값이 존재 할 시,
-            return const Text("It has data!");
+            return ListView.separated(
+              //ListView.builder 는 ListView 의 상위 버전
+              // user 가 해당 항목을 보고있지 않는다면 항목을 메모리에서 삭제해버림
+              //ListView.separated 는 builder 가 만든 item 사이에 무언가를 넣을 시 사용
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+
+              itemBuilder: (context, index) {
+                var webtoon = snapshot.data![index];
+                return Text(webtoon.title);
+              },
+
+              separatorBuilder: (context, index) {
+                // 사이 간격에 넣을 시 사용
+                return const SizedBox(
+                  width: 20,
+                );
+              },
+            );
           } else {
-            return const Text("Loading . . . ");
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
