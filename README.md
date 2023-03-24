@@ -422,7 +422,7 @@ Expanded(
 
 - `Image.network` 는 `image-url`을 이용해 이미지를 가져올 수 있음
 - `403 error` 가 나온다면 브라우저가 해당 url 을 가져올 때 브라우저의 값이 아니면 차단하기 때문
-- `headers` 에 `User-Agent` 값을 넣어주면 해결
+- `headers` 에 `User-Agent` 값을 넣어주면 해결 ([참고](https://gist.github.com/preinpost/941efd33dff90d9f8c7a208da40c18a9))
 
 <br/>
 
