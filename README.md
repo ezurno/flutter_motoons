@@ -388,3 +388,90 @@ ListView.separated(
 <img src ="md_resources\resource_15.png" width="200"/>
 <br/>
 <br/>
+
+<br/>
+
+###### 20230324
+
+> ## 웹툰의 섬네일 이미지 활용
+
+<br/>
+<img src ="md_resources\resource_16.png" width="400"/>
+<br/>
+
+- 우선적으로 함수를 하나 만들어 기존에 있던 길었던 widget을 정리
+
+<br/>
+<img src ="md_resources\resource_17.png" width="400"/>
+<br/>
+
+- 하지만 **Error** 가 발생함
+- 해당 에러는 `ListView` widget 의 `height` 값을 정해주지 않아 생긴 **Error**
+- `Expanded`를 사용해 해결
+
+```Dart
+Expanded(
+            child: makeList(snapshot),
+            //ListView 가 높이가 무한정으로 커질 수 있기 떄문에 error 가 나는데, Expanded로 잡아주어 해결
+        )
+```
+
+<br/>
+
+## Image.network 를 사용해 url-image 가져오기
+
+- `Image.network` 는 `image-url`을 이용해 이미지를 가져올 수 있음
+- `403 error` 가 나온다면 브라우저가 해당 url 을 가져올 때 브라우저의 값이 아니면 차단하기 때문
+- `headers` 에 `User-Agent` 값을 넣어주면 해결
+
+<br/>
+
+```Dart
+Image.network(
+                webtoon.thumb,
+                headers: const {
+                  "User-Agent":
+                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+                },
+)
+```
+
+<br/>
+<p>
+<img src ="md_resources\resource_18.png" height="400"/>
+<img src ="md_resources\resource_19.png" height="400"/>
+<p/>
+<br/>
+
+- 정상적으로 이미지를 불러온 모습
+- 이미지가 너무 크기 때문에 `Container`로 감싸준 후 `decoration` 을 활용해 사이즈를 조절해줌
+- `border-radius`를 주기 위해 `clipBehavior` 를 활용해 넘치는 이미지 부분을 관리 해줌
+
+<br/>
+
+## 그림자 적용하기
+
+- 이미지에 그림자를 적용하기 위해 `BoxShadow` widget을 활용
+
+<br/>
+
+```Dart
+boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: const Offset(10, 10),
+                blurRadius: 15,
+              ), // BoxShadow widget은 Box의 그림자를 만들어주는 Widget
+            ],
+
+```
+
+<br/>
+<p>
+<img src ="md_resources\resource_20.png" height="400"/>
+<img src ="md_resources\resource_21.png" height="400"/>
+<p/>
+<br/>
+
+- 그림자가 잘 적용된 모습.
+- 추가로 `ListView` 에 `padding` 속성을 부여해 칸을 띄워주었다.
