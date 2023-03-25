@@ -475,3 +475,78 @@ boxShadow: [
 
 - 그림자가 잘 적용된 모습.
 - 추가로 `ListView` 에 `padding` 속성을 부여해 칸을 띄워주었다.
+
+<br/>
+
+###### 20230325
+
+> ## 각 웹툰의 상세정보 만들기
+
+<br/>
+
+## GestureDetector 로 이벤트 동작 생성하기
+
+<br/>
+
+- `GestureDetactor` 는 **동작 이벤트**를 감지하는 widget으로써 클릭 이벤트 등을 추가 해줄 수 있다
+- `onTap` 은 클릭이벤트와 유사
+
+<br/>
+
+```Dart
+ GestureDetector(
+      // 동작 이벤트를 감지하는 widget
+      onTap: () {
+        // 클릭 시 event 생성
+      }
+ )
+```
+
+<br/>
+
+## Navigator 로 화면 전환하기
+
+<br/>
+
+- `Navigator` 는 해당 `route` 의 widget을 화면전환 할수 있게 함
+- `Navigator.push()` 의 args는 `context` 와 `route` 를 사용함
+- route를 `PageRouteBuilder` 를 사용 [[참고]]( https://docs.flutter.dev/cookbook/animation/page-route-animation )
+
+<br/>
+
+```Dart
+estureDetector(
+      // 동작 이벤트를 감지하는 widget
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            // PageRouteBuilder 를 이용해 화면전환 animation 을 구현
+            // https://docs.flutter.dev/cookbook/animation/page-route-animation [문서참고]
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = const Offset(1.0, 0.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                // Slider 애니메이션을 주는 widget.
+                position: animation.drive(tween),
+                child: child,
+              );
+                }
+          )
+        )
+      }
+)
+```
+
+<br/>
+<p>
+<img src ="md_resources\resource_22.png" height="400"/>
+<img src ="md_resources\resource_23.png" height="400"/>
+<p/>
+<br/>
+
+- 클릭 시 화면전환이 이루어지며 상단 탭의 이름이 **webtoon** 의 `title` 명으로 변경 된 모습
