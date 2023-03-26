@@ -550,3 +550,43 @@ estureDetector(
 <br/>
 
 - 클릭 시 화면전환이 이루어지며 상단 탭의 이름이 **webtoon** 의 `title` 명으로 변경 된 모습
+
+<br/>
+
+###### 20230326
+
+> ## Hero-widget을 사용해 화면전환 Animation 만들기
+
+<br/>
+
+- `Hero` widget은 `react-animation.layoutId`를 사용해 애니메이션을 주는 효과와 비슷함
+- 사용하려면 해당 효과를 줄 **widget** 에 `Hero` widget 으로 감싼 후 tag를 부여
+- 화면전환 시 보여질 widget에도 동일한 tag를 부여하면 해당 **widget**이 전환되지 않고 이동하는 애니메이션을 줌
+
+<br/>
+
+```Dart
+  Hero(
+    // 이동할 widget. **webtoons_widget.dart
+            // Hero-widget 은 react-animation 의 layoutid 를 사용하는 것과 유사함
+            tag: id,
+            // tag 는 해당 widget 의 id를 부여하는 값
+            child: Container(
+              width: 250,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                // 중략
+```
+
+```Dart
+  Row(
+    // 이동 될 widget **detail_screen.dart
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
+                tag: id,
+                // 동일한 tag 값을 주어야 한다.
+                child: Container(
+                  width: 250,
+                  clipBehavior: Clip.hardEdge,
+```
