@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_motoons/models/webtoon_detail_model.dart';
+import 'package:flutter_motoons/models/webtoon_episode_model.dart';
 import 'package:flutter_motoons/models/webtoons_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,5 +58,27 @@ class ApiService {
           webtoon); // 그 값을 새로운 WebtoonDetailModel 로 재 생성
     }
     throw Error(); // 그렇지 않을 시 에러
+  }
+
+  static Future<List<WebtoonEpisodeModel>> getLatestEpisodesById(
+      String id) async {
+    // 최근 episode 정보를 가져오는 함수 상단의 getToonById 와 유사
+
+    List<WebtoonEpisodeModel> episodesInstances = [];
+
+    final url = Uri.parse("$baseUrl/$id/episodes");
+    final response = await http.get(url); // 응답 값을 가져옴
+    if (response.statusCode == 200) {
+      final episodes = jsonDecode(response.body);
+
+      for (var episode in episodes) {
+        // episodes 배열 내 값을 일일히 WebtoonEpisodeModel 로 전달
+        episodesInstances.add(WebtoonEpisodeModel.fromJson(episode));
+        //episodesInstances 배열 내에 add 함
+      }
+
+      return episodesInstances;
+    }
+    throw Error();
   }
 }
