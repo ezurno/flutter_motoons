@@ -590,3 +590,57 @@ estureDetector(
                   width: 250,
                   clipBehavior: Clip.hardEdge,
 ```
+
+<br/>
+<br/>
+
+###### 20230420
+
+> ## API 통신을 위한 Model 생성
+
+<br/>
+
+- **api data** 를 받아올 떄 값을 일시적으로 담을 `model` 을 생성
+- **Future** 로 `model` 을 받을 함수 생성
+- url 을 url + id 값으로 접근하기 위해 Uri.parse로 수정 해주며 해당 url 값을 response 로 받음
+- statusCode 가 200 일 시 **정상적으로 값을 받아온 것** 이므로 해당하는 json 을 decode 해서 model 에 전달 함
+
+<br/>
+
+```Dart
+  static Future<WebtoonDetailModel> getToonById(String id) async {
+    final url = Uri.parse("$baseUrl/$id");
+    // 가져올 id 값의 데이터를 받아와야 하므로
+    final response = await http.get(url); // 응답 값을 가져옴
+    if (response.statusCode == 200) {
+      // 응답 값이 200 이면 정상적으로 값을 가져온 것이므로
+      final webtoon = jsonDecode(response.body); // 받아온 json 의 값을 decode 해서 풀어줌
+
+      return WebtoonDetailModel.fromJson(
+          webtoon); // 그 값을 새로운 WebtoonDetailModel 로 재 생성
+    }
+    throw Error(); // 그렇지 않을 시 에러
+  }
+
+  static Future<List<WebtoonEpisodeModel>> getLatestEpisodesById(
+      String id) async {
+    // 최근 episode 정보를 가져오는 함수 상단의 getToonById 와 유사
+
+    List<WebtoonEpisodeModel> episodesInstances = [];
+
+    final url = Uri.parse("$baseUrl/$id/episodes");
+    final response = await http.get(url); // 응답 값을 가져옴
+    if (response.statusCode == 200) {
+      final episodes = jsonDecode(response.body);
+
+      for (var episode in episodes) {
+        // episodes 배열 내 값을 일일히 WebtoonEpisodeModel 로 전달
+        episodesInstances.add(WebtoonEpisodeModel.fromJson(episode));
+        //episodesInstances 배열 내에 add 함
+      }
+
+      return episodesInstances;
+    }
+    throw Error();
+  }
+```
