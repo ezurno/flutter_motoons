@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_motoons/models/webtoon_detail_model.dart';
 import 'package:flutter_motoons/models/webtoons_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,5 +43,19 @@ class ApiService {
       return webtoonInstance;
     }
     throw Error(); // 그렇지 않을 시 error
+  }
+
+  static Future<WebtoonDetailModel> getToonById(String id) async {
+    final url = Uri.parse("$baseUrl/$id");
+    // 가져올 id 값의 데이터를 받아와야 하므로
+    final response = await http.get(url); // 응답 값을 가져옴
+    if (response.statusCode == 200) {
+      // 응답 값이 200 이면 정상적으로 값을 가져온 것이므로
+      final webtoon = jsonDecode(response.body); // 받아온 json 의 값을 decode 해서 풀어줌
+
+      return WebtoonDetailModel.fromJson(
+          webtoon); // 그 값을 새로운 WebtoonDetailModel 로 재 생성
+    }
+    throw Error(); // 그렇지 않을 시 에러
   }
 }
