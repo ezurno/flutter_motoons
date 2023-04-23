@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_motoons/models/webtoon_episode_model.dart';
+import 'package:flutter_motoons/services/api_service.dart';
 
-class DetailScreen extends StatelessWidget {
+import '../models/webtoon_detail_model.dart';
+
+class DetailScreen extends StatefulWidget {
   final String title, thumb, id;
 
   const DetailScreen({
@@ -9,6 +13,23 @@ class DetailScreen extends StatelessWidget {
     required this.thumb,
     required this.id,
   });
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  late Future<WebtoonDetailModel> webtoon;
+  // widget.id 의 widget 은 해당하는 별도의 widget 이며 각 해당하는 웹툰을 의미함
+  late Future<List<WebtoonEpisodeModel>> episodes;
+
+  @override
+  void initState() {
+    super.initState();
+    webtoon = ApiService.getToonById(widget.id);
+    // 바로 참조가 안되므로 initState 값으로 넣어주어야 함
+    episodes = ApiService.getLatestEpisodesById(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +42,8 @@ class DetailScreen extends StatelessWidget {
         elevation: 2,
         centerTitle: true, // android tool는 자동 가운데 정렬이 없으므로 따로 지정
         title: Text(
-          title,
+          widget.title,
+          // 해당 부분이 title -> widget.title 로 바뀐 이유는 detailScreen 이 stateless 에서 stateful 로 바뀌었기 때문
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
@@ -38,7 +60,7 @@ class DetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Hero(
-                tag: id,
+                tag: widget.id,
                 child: Container(
                   width: 250,
                   clipBehavior: Clip.hardEdge,
@@ -54,7 +76,7 @@ class DetailScreen extends StatelessWidget {
                     ],
                   ),
                   child: Image.network(
-                    thumb,
+                    widget.thumb,
                     headers: const {
                       "User-Agent":
                           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
