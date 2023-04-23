@@ -644,3 +644,71 @@ estureDetector(
     throw Error();
   }
 ```
+
+<br/>
+<br/>
+
+###### 20230423
+
+> ## API 통신으로 받아온 data 사용하기
+
+<br/>
+
+- `ApiService` 에서 구현한 get~~Id 함수를 가져와서 사용 함
+- 사용하기 위해서는 get~~Id 함수가 args로 id를 갖기 때문에 id 를 넘겨주어야 함
+- 하지만 `statelessWidget` 은 넘겨줄 수가 없음 => **각 클래스별로 개별 id가 아니기 때문**
+- 따라서 `statefulWidget`으로 전환 한 후 `late` 를 걸어 `initState()` 함수를 호출 해 id 를 넘겨주어야 함
+- `WebtoonEpisodeModel` 과 `WebtoonDetailModel` 로 받아온 data 를 사용 하기 위해선 **Stateful-Widget** 으로 바꾸어야함
+
+<br/>
+<br/>
+
+```Dart
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+class _DetailScreenState extends State<DetailScreen> {
+  late Future<WebtoonDetailModel> webtoon;
+  // widget.id 의 widget 은 해당하는 별도의 widget 이며 각 해당하는 웹툰을 의미함
+  late Future<List<WebtoonEpisodeModel>> episodes;
+  @override
+  void initState() {
+    super.initState();
+    webtoon = ApiService.getToonById(widget.id);
+    // 바로 참조가 안되므로 initState 값으로 넣어주어야 함
+    episodes = ApiService.getLatestEpisodesById(widget.id);
+  }
+```
+
+<br/>
+
+```Dart
+/*
+  앞서 연결한 detail-data를 가져와서 사용하기 위해 FutureBuilder 를 사용
+*/
+
+FutureBuilder(
+            future: webtoon,
+            // webtoon 과 episodes 를 가져오기 위해 사용
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                  ),
+                  child: Column(... // 중략),
+                    ],
+                  ),
+                );
+              } else {
+                return const Text("...");
+              }
+            },
+```
+
+<br/>
+<br/>
+<p>
+<img src="md_resources/resource_24.png" height="300"/>
+<img src="md_resources/resource_25.png" height="300"/>
+</p>
