@@ -127,6 +127,29 @@ class _DetailScreenState extends State<DetailScreen> {
               }
             },
             // widget 을 return gksms builder.
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          FutureBuilder(
+            future: episodes,
+            // episodes 를 받아오기 위해
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    for (var episode in snapshot.data!.length > 8
+                        ? snapshot.data!.sublist(0, 8)
+                        : snapshot.data!)
+                      Text(episode.title),
+                  ],
+                );
+              }
+
+              // 만약 리스트의 길이를 모르면 ListView() 로 생성하는 편이 좋음
+
+              return Container();
+            },
           )
         ],
       ),
