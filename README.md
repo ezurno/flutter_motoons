@@ -712,3 +712,52 @@ FutureBuilder(
 <img src="md_resources/resource_24.png" height="300"/>
 <img src="md_resources/resource_25.png" height="300"/>
 </p>
+
+<br/>
+<br/>
+
+###### 20230424
+
+> ## API 통신으로 받아온 episode 사용하기
+
+<br/>
+
+- 상단의 **data 받아오기**와 동일
+- `episode` 목록을 List 형식으로 뿌려줌
+- 데이터의 갯수를 알고 있으면 `Column()` 으로 생성하는 것이 편하지만 되도록이면 `ListView()` 를 사용하길 권장
+
+<br/>
+<p>
+<img src="md_resources/resource_26.png" height="300"/>
+<img src="md_resources/resource_27.png" height="300"/>
+<p/>
+<br/>
+
+제대로 `episode.title` 을 출력하는 모습 (좌측)
+
+하지만 떄떄로 webtoon 의 부연설명이 길수록 하단의 창을 넘어 생성되어 error 발생 (우측)
+
+<br/>
+
+```Dart
+body: SingleChildScrollView(
+        // 화면이 overflow 될 때 감싸주면 넘치는 화면을 제대로 구사 할 수 있음
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+          child: Column(
+            children: [
+
+              /* --  중략   --  */
+
+```
+
+<br/>
+<p>
+<img src="md_resources/resource_28.png" height="300"/>
+<img src="md_resources/resource_29.png" height="300"/>
+<p/>
+<br/>
+
+`SingleChildScrollView()` widget 을 사용하여 넘치는 화면을 정상적으로 출력 (좌측)
+
+수정 후 **detail** 에 `style` 을 줌 (우측)
