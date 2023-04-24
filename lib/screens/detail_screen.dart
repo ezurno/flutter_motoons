@@ -54,12 +54,9 @@ class _DetailScreenState extends State<DetailScreen> {
       body: SingleChildScrollView(
         // 화면이 overflow 될 때 감싸주면 넘치는 화면을 제대로 구사 할 수 있음
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
           child: Column(
             children: [
-              const SizedBox(
-                height: 50,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -128,7 +125,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 // widget 을 return gksms builder.
               ),
               const SizedBox(
-                height: 15,
+                height: 25,
               ),
               FutureBuilder(
                 future: episodes,
@@ -141,15 +138,29 @@ class _DetailScreenState extends State<DetailScreen> {
                             ? snapshot.data!.sublist(0, 8)
                             : snapshot.data!)
                           Container(
-                            decoration:
-                                BoxDecoration(color: Colors.green.shade300),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade400,
+                              borderRadius: BorderRadius.circular(18),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(episode.title),
-                                  const Icon(Icons.chevron_right_rounded)
+                                  Text(
+                                    episode.title,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: Colors.white,
+                                  )
                                 ],
                               ),
                             ),
