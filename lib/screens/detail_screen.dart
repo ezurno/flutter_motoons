@@ -137,6 +137,8 @@ class _DetailScreenState extends State<DetailScreen> {
                         for (var episode in snapshot.data!.length > 8
                             ? snapshot.data!.sublist(0, 8)
                             : snapshot.data!)
+                          // 최근 8편의 웹툰만 노출 되게 끔 조건문 작성
+
                           Container(
                             margin: const EdgeInsets.only(bottom: 10),
                             decoration: BoxDecoration(
