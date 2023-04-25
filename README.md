@@ -761,3 +761,92 @@ body: SingleChildScrollView(
 `SingleChildScrollView()` widget 을 사용하여 넘치는 화면을 정상적으로 출력 (좌측)
 
 수정 후 **detail** 에 `style` 을 줌 (우측)
+
+<br/>
+<br/>
+
+###### 20230425
+
+> ## URL 연결하기
+
+<br/>
+
+- **Flutter** 에선 외부 `url` 을 연결 할 때 따로 라이브러리를 설치해야 함
+- https://pub.dev/packages/url_launcher 에서 설치
+- 설치후 파일을 조금 수정해 주어야 함
+
+<br/>
+<img src="md_resources/resource_30.png" width="400"/>
+<br/>
+<br/>
+
+```Dart
+// ios
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
+
+// android
+<!-- Provide required visibility configuration for API level 30 and above -->
+<queries>
+  <!-- If your app checks for SMS support -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="sms" />
+  </intent>
+  <!-- If your app checks for call support -->
+  <intent>
+    <action android:name="android.intent.action.VIEW" />
+    <data android:scheme="tel" />
+  </intent>
+</queries>
+```
+
+<p>
+<img src="md_resources/resource_31.png" height="400"/>
+<img src="md_resources/resource_32.png" height="400"/>
+<p/>
+
+좌측은 **android**, 우측은 **ios**
+
+<br/>
+<br/>
+
+- 각 화로 넘어가는 버튼을 따로 refactoring 해줌
+- refactoring 후 `url` 을 연결
+- `GestureDetactor` 로 해당하는 버튼을 눌렀을 시 `onButtonTap()` 함수가 실행되게 함
+
+<br/>
+
+```Dart
+  onButtonTap() async {
+    final url = Uri.parse(
+        "https://comic.naver.com/webtoon/detail?titleId=$webtoonId&no=${episode.id}");
+    await launchUrl(url);
+    // luanchUrl 은 Future 를 갖는 함수기 때문에 onButtonTap 에 async 를 걸어야 함
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      // 사용자의 터치를 인식하기 위해 사용하는 Widget
+      onTap: onButtonTap, // 해당하는 widget을 클릭 했을 시 onButtonTap 함수를 실행
+
+      child: Container(
+
+        /* --- 중 략  --- */
+```
+
+<br/>
+<br/>
+<p>
+<img src="md_resources/resource_34.png" height="400"/>
+<img src="md_resources/resource_33.png" height="400"/>
+<img src="md_resources/resource_35.png" height="400"/>
+<p/>
+
+**google** 으로 테스트 후 **webtoon** 에 적용
+
+문제 없이 적용 되는 모습을 확인 할 수 있음
