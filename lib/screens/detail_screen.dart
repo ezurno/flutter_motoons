@@ -140,7 +140,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             : snapshot.data!)
                           // 최근 8편의 웹툰만 노출 되게 끔 조건문 작성
 
-                          Episode(episode: episode)
+                          Episode(episode: episode, webtoonId: widget.id)
                       ],
                     );
                   }
