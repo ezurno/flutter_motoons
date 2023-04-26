@@ -850,3 +850,116 @@ body: SingleChildScrollView(
 **google** 으로 테스트 후 **webtoon** 에 적용
 
 문제 없이 적용 되는 모습을 확인 할 수 있음
+
+<br/>
+<br/>
+
+###### 20230426
+
+> ## 좋아요 리스트 만들기
+
+<br/>
+
+- **좋아요 리스트 (liked-list)** 를 만들기 위해선 정보를 담는 라이브러리가 필요
+- https://pub.dev/packages/shared_preferences/install
+
+<br/>
+<img src="md_resources/resource_36.png" width="400"/>
+<br/>
+
+- 핸드폰 내에 상태를 저장하기 위해 사용
+- 저장소와 connection 을 만들어 사용
+- [공식문서](https://pub.dev/packages/shared_preferences) 참고
+
+<br/>
+
+```Dart
+// Write Data
+
+// Obtain shared preferences.
+final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+// Save an integer value to 'counter' key.
+await prefs.setInt('counter', 10);
+// Save an boolean value to 'repeat' key.
+await prefs.setBool('repeat', true);
+// Save an double value to 'decimal' key.
+await prefs.setDouble('decimal', 1.5);
+// Save an String value to 'action' key.
+await prefs.setString('action', 'Start');
+// Save an list of strings to 'items' key.
+await prefs.setStringList('items', <String>['Earth', 'Moon', 'Sun']);
+
+// Read Data
+
+// Try reading data from the 'counter' key. If it doesn't exist, returns null.
+final int? counter = prefs.getInt('counter');
+// Try reading data from the 'repeat' key. If it doesn't exist, returns null.
+final bool? repeat = prefs.getBool('repeat');
+// Try reading data from the 'decimal' key. If it doesn't exist, returns null.
+final double? decimal = prefs.getDouble('decimal');
+// Try reading data from the 'action' key. If it doesn't exist, returns null.
+final String? action = prefs.getString('action');
+// Try reading data from the 'items' key. If it doesn't exist, returns null.
+final List<String>? items = prefs.getStringList('items');
+
+// Delete Data
+
+// Remove data for the 'counter' key.
+await prefs.remove('counter');
+```
+
+<br/>
+<br/>
+
+```Dart
+  // Shared Preferrences 를 활용
+
+  late SharedPreferences prefs;
+  // shared preferences 를 사용한 변수 설정
+  bool isLiked = false; // 좋아요를 눌렀는지 여부, 초깃값은 false
+
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedToons = prefs.getStringList("likedToons");
+    // 좋아요를 누른 웹툰의 목록을 불러옴
+
+    if (likedToons != null) {
+      if (likedToons.contains(widget.id) == true) {
+        //likedToons 리스트에 해당 widget의 id 가 존재하는지
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      // likedToons 가 없으면 (첫 실행이면) 좋아요 리스트를 생성
+      await prefs.setStringList("likedToons", []); // 초깃값은 빈 배열
+    }
+  }
+
+  onHeartTap() async {
+    final likedToons = prefs.getStringList("likedToons");
+    if (likedToons != null) {
+      if (isLiked) {
+        likedToons.remove(widget.id);
+      } else {
+        likedToons.add(widget.id);
+      }
+
+      await prefs.setStringList("likedToons", likedToons);
+
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
+  }
+```
+
+<br/>
+<p>
+<img src="md_resources/resource_38.png" height="400"/>
+<img src="md_resources/resource_37.png" height="400"/>
+<p/>
+<br/>
+
+정상적으로 `icons()` 가 작동하는 모습
