@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_motoons/models/webtoon_episode_model.dart';
 import 'package:flutter_motoons/services/api_service.dart';
 import 'package:flutter_motoons/widgets/episode_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/webtoon_detail_model.dart';
 
@@ -24,12 +25,53 @@ class _DetailScreenState extends State<DetailScreen> {
   // widget.id 의 widget 은 해당하는 별도의 widget 이며 각 해당하는 웹툰을 의미함
   late Future<List<WebtoonEpisodeModel>> episodes;
 
+  late SharedPreferences prefs;
+  // shared preferences 를 사용한 변수 설정
+  bool isLiked = false; // 좋아요를 눌렀는지 여부, 초깃값은 false
+
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedToons = prefs.getStringList("likedToons");
+    // 좋아요를 누른 웹툰의 목록을 불러옴
+
+    if (likedToons != null) {
+      if (likedToons.contains(widget.id) == true) {
+        //likedToons 리스트에 해당 widget의 id 가 존재하는지
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      // likedToons 가 없으면 (첫 실행이면) 좋아요 리스트를 생성
+      await prefs.setStringList("likedToons", []); // 초깃값은 빈 배열
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     webtoon = ApiService.getToonById(widget.id);
     // 바로 참조가 안되므로 initState 값으로 넣어주어야 함
     episodes = ApiService.getLatestEpisodesById(widget.id);
+
+    initPrefs(); // 저장소 생성함수 실행
+  }
+
+  onHeartTap() async {
+    final likedToons = prefs.getStringList("likedToons");
+    if (likedToons != null) {
+      if (isLiked) {
+        likedToons.remove(widget.id);
+      } else {
+        likedToons.add(widget.id);
+      }
+
+      await prefs.setStringList("likedToons", likedToons);
+
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
   }
 
   @override
@@ -43,9 +85,11 @@ class _DetailScreenState extends State<DetailScreen> {
 
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.favorite_outline_outlined,
+              onPressed: onHeartTap,
+              icon: Icon(
+                isLiked
+                    ? Icons.favorite_outlined
+                    : Icons.favorite_outline_outlined,
               ))
         ],
         // favorite 은 appBar 에 넣을 것이므로 action 을 추가
