@@ -40,6 +40,16 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
+
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.favorite_outline_outlined,
+              ))
+        ],
+        // favorite 은 appBar 에 넣을 것이므로 action 을 추가
+
         elevation: 2,
         centerTitle: true, // android tool는 자동 가운데 정렬이 없으므로 따로 지정
         title: Text(
